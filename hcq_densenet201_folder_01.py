@@ -23,7 +23,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from utils import progress_bar
 
-batch_size = 20
+batch_size = 32
 EPOCH = 120
 use_gpu = torch.cuda.is_available()
 
@@ -98,10 +98,11 @@ def data_prepare():
     ## val
     val_dir_name = 'validation'
     image_datasets[val_dir_name] = datasets.ImageFolder(os.path.join(data_dir, val_dir_name), data_transforms[val_dir_name])
-    dataloaders[val_dir_name] = torch.utils.data.DataLoader(image_datasets[train_dir_name], batch_size=batch_size, shuffle=True, num_workers=4)
+    dataloaders[val_dir_name] = torch.utils.data.DataLoader(image_datasets[val_dir_name], batch_size=batch_size, shuffle=True, num_workers=4)
     val_dataset_sizes = len(image_datasets[val_dir_name])
     print("validation dataset_sizes = {}".format(val_dataset_sizes))
-    
+
+    ## class name
     class_names = image_datasets['train'].classes
     print("class_names = {}".format(class_names))
     

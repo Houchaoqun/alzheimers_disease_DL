@@ -98,7 +98,7 @@ def data_prepare():
     ## val
     val_dir_name = 'validation'
     image_datasets[val_dir_name] = datasets.ImageFolder(os.path.join(data_dir, val_dir_name), data_transforms[val_dir_name])
-    dataloaders[val_dir_name] = torch.utils.data.DataLoader(image_datasets[train_dir_name], batch_size=batch_size, shuffle=True, num_workers=4)
+    dataloaders[val_dir_name] = torch.utils.data.DataLoader(image_datasets[val_dir_name], batch_size=batch_size, shuffle=True, num_workers=4)
     val_dataset_sizes = len(image_datasets[val_dir_name])
     print("validation dataset_sizes = {}".format(val_dataset_sizes))
     

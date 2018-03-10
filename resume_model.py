@@ -31,10 +31,11 @@ data_transforms = {
     ]),
 }
 
+### paramaters initial...
 batch_size = 1
 # print(len(sys.argv))
 # target_resume_name = sys.argv[1]
-target_resume_name = "validation"
+target_resume_name = "test"
 model_save_path = os.path.join('./pytorch_model', 'densenet201_96%_epoch50_single_subject_data_fold_02_train_val_test_entropy_keep_SliceNum_81.7t')
 folder_name = 'single_subject_data_fold_02_train_val_test_entropy_keep_SliceNum_81'
 # data_dir = os.path.join('/home/hcq/alzheimer_disease/ADNI_825/experiments_FineTunning', folder_name)
@@ -44,13 +45,20 @@ test_loader = torch.utils.data.DataLoader(test_datasets, batch_size=batch_size,
                                           shuffle=False, num_workers=4)
 
 ## print model info
+save_info_path = os.path.join("./result", target_resume_name + "_" + folder_name + ".txt")
+
 import datetime
 i = datetime.datetime.now()
 date = str(i.year) + str("%02d"%i.month) + str("%02d"%i.day) + "-" + str("%02d"%i.hour) + str("%02d"%i.minute) + str("%02d"%i.second)
 
-print("===" + date + "===")
-print("folder_name = {}".format(folder_name))
-print("model_save_path = {}".format(model_save_path))
+with open(save_info_path, "a+") as save_info_txt:
+    print("===" + date + "===")
+    print("folder_name = {}".format(folder_name))
+    print("model_save_path = {}".format(model_save_path))
+    save_info_txt.writelines("===" + date + "===" + "\n")
+    save_info_txt.writelines("folder_name = {}".format(folder_name) + "\n")
+    save_info_txt.writelines("model_save_path = {}".format(model_save_path) + "\n")
+
 # print(" ={}".format())
 
 print("*"*20)
@@ -147,6 +155,9 @@ def predict_test():
             break
 # class subject_result():
 
+### add by hcq 20180310
+### test for specified subject
+
 def predict_test2():
     model.eval()
     img_name_offset = 11
@@ -158,6 +169,7 @@ def predict_test2():
     # print(target_resume_name)
     subject_id_test_path = "./subject_id/"+ target_resume_name + "_single_subject_data_fold_02_train_val_test_entropy_keep_SliceNum_81.txt"
     # subject_id_test_path = "./subject_id/validation_single_subject_data_fold_02_train_val_test_entropy_keep_SliceNum_81.txt"
+    
     with open(subject_id_test_path, "r") as subject_id_test_list:
         for item in subject_id_test_list:
             item = item.replace("\n", "")
@@ -181,9 +193,10 @@ def predict_test2():
                 img_name = test_loader.dataset.imgs[batch_idx]
                 img_name = img_name[0]
                 img_name = img_name.split("/")[img_name_offset]
-                subject_id = img_name.split(".")[0]
+                subject_name = img_name.split(".")[0]
                 # print(subject_id)
-                subject_id = subject_id.split("_")[1]
+                unique_id = subject_name.split("_")[0][0:4] ## To unique the subject id: id = 072 both in AD and NC
+                subject_id = unique_id + "_" + subject_name.split("_")[1]
 
                 if(cur_subject_id == subject_id):
                     outputs = model(inputs)
@@ -210,16 +223,22 @@ def predict_test2():
             percentage = float(num_AD)/num_NC
             # print("percentage = {}".format(percentage))
             if((percentage>1 and label == "AD") or (percentage<1 and label == "NC")):
-                print("subject_id = {}, label = {} ||| num_AD = {}, num_NC = {}, num_total = {}".format(cur_subject_id, label, num_AD, num_NC, num_total))
+                dis_info = "subject_id = {}, label = {} ||| num_AD = {}, num_NC = {}, num_total = {}".format(cur_subject_id, label, num_AD, num_NC, num_total)
                 num_correct += 1
             else:
-                print("subject_id = {}, label = {} ||| num_AD = {}, num_NC = {}, num_total = {}  [error]".format(cur_subject_id, label, num_AD, num_NC, num_total))
+                dis_info = "subject_id = {}, label = {} ||| num_AD = {}, num_NC = {}, num_total = {}  [error]".format(cur_subject_id, label, num_AD, num_NC, num_total)
+            
+            with open(save_info_path, "a+") as save_info_txt:
+                save_info_txt.writelines(dis_info + "\n")
+                print(dis_info)
 
-            # print("--")
-            # if num_preds == 2:
-            #     break
-        print("***** final result information *****")
-        print("final acc = {} ({}/{})".format((float(num_correct)/num_all_subject), num_correct, num_all_subject))
+        with open(save_info_path, "a+") as save_info_txt:
+            print("***** final result information *****")
+            info = "final acc = {} ({}/{})".format((float(num_correct)/num_all_subject), num_correct, num_all_subject)
+            print(info)
+            save_info_txt.writelines(info + "\n")
+
+        
 
         ## python resume_model.py > result_test_single_subject_81.txt
         ## python resume_model.py > result_validation_single_subject_81.txt

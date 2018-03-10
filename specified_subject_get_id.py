@@ -12,7 +12,7 @@ import random
 def backup_txt_rename(txt_path):
 	if os.path.exists(txt_path):
 		i = datetime.datetime.now()
-		date = str(i.year) + str(i.month) + str(i.day) + str(i.hour) + str(i.minute) + str(i.second)
+		date = str(i.year) + str("%02d"%i.month) + str("%02d"%i.day) + str("%02d"%i.hour) + str("%02d"%i.minute) + str("%02d"%i.second)
 		new_name = txt_path +".bak" + date
 		os.rename(txt_path, new_name)
 		# copy(new_name, "./backup/")
@@ -39,7 +39,8 @@ def get_subject_id(slice_path_root, _dir, fold_name, save_path):
 		with open(save_file_txt_path, "a+") as save_file_txt:
 			for slice_item in slice_list:
 				slice_name = slice_item.split(".")[0]
-				subject_name = slice_name.split("_")[1]
+				unique_id = slice_name.split("_")[0][0:4] ## To unique the subject id: id = 072 both in AD and NC
+				subject_name = unique_id + "_" + slice_name.split("_")[1]
 				is_save = True
 
 				# print("xx")
@@ -69,7 +70,7 @@ if __name__=="__main__":
 
 	
 	root_path = "/home/reserch/documents/deeplearning/alzheimers_disease/ADNI-825-Slice/experiments_FineTunning"
-	fold_name = "single_subject_data_fold_02_train_val_test_entropy_keep_SliceNum_81"
+	fold_name = "single_subject_data_fold_01_train_val_test_entropy_keep_SliceNum_81"
 	slice_path_root = os.path.join(root_path, fold_name)
 
 	get_subject_id(slice_path_root, "train", fold_name, save_path)
