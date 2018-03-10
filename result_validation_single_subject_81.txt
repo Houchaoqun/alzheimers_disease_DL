@@ -1,0 +1,37 @@
+===20180310-184637===
+folder_name = single_subject_data_fold_02_train_val_test_entropy_keep_SliceNum_81
+model_save_path = ./pytorch_model/densenet201_96%_epoch50_single_subject_data_fold_02_train_val_test_entropy_keep_SliceNum_81.7t
+********************
+subject_id = S076, label = AD ||| num_AD = 216, num_NC = 27, num_total = 243
+subject_id = S066, label = AD ||| num_AD = 209, num_NC = 34, num_total = 243
+subject_id = S189, label = AD ||| num_AD = 58, num_NC = 185, num_total = 243  [error]
+subject_id = S152, label = AD ||| num_AD = 134, num_NC = 109, num_total = 243
+subject_id = S165, label = AD ||| num_AD = 255, num_NC = 231, num_total = 486
+subject_id = S198, label = AD ||| num_AD = 274, num_NC = 212, num_total = 486
+subject_id = S119, label = AD ||| num_AD = 182, num_NC = 61, num_total = 243
+subject_id = S003, label = AD ||| num_AD = 188, num_NC = 55, num_total = 243
+subject_id = S195, label = AD ||| num_AD = 212, num_NC = 31, num_total = 243
+subject_id = S023, label = AD ||| num_AD = 117, num_NC = 126, num_total = 243  [error]
+subject_id = S019, label = AD ||| num_AD = 301, num_NC = 185, num_total = 486
+subject_id = S199, label = AD ||| num_AD = 116, num_NC = 127, num_total = 243  [error]
+subject_id = S085, label = AD ||| num_AD = 113, num_NC = 130, num_total = 243  [error]
+subject_id = S146, label = AD ||| num_AD = 210, num_NC = 33, num_total = 243
+subject_id = S046, label = AD ||| num_AD = 134, num_NC = 109, num_total = 243
+subject_id = S005, label = AD ||| num_AD = 23, num_NC = 220, num_total = 243  [error]
+subject_id = S116, label = AD ||| num_AD = 116, num_NC = 127, num_total = 243  [error]
+subject_id = S187, label = AD ||| num_AD = 222, num_NC = 21, num_total = 243
+subject_id = S159, label = AD ||| num_AD = 232, num_NC = 254, num_total = 486  [error]
+subject_id = S065, label = AD ||| num_AD = 202, num_NC = 284, num_total = 486  [error]
+subject_id = S070, label = AD ||| num_AD = 52, num_NC = 191, num_total = 243  [error]
+subject_id = S154, label = AD ||| num_AD = 235, num_NC = 8, num_total = 243
+subject_id = S060, label = AD ||| num_AD = 208, num_NC = 35, num_total = 243
+subject_id = S073, label = AD ||| num_AD = 218, num_NC = 25, num_total = 243
+subject_id = S102, label = AD ||| num_AD = 130, num_NC = 113, num_total = 243
+subject_id = S024, label = AD ||| num_AD = 171, num_NC = 72, num_total = 243
+subject_id = S064, label = AD ||| num_AD = 170, num_NC = 73, num_total = 243
+subject_id = S186, label = AD ||| num_AD = 2, num_NC = 241, num_total = 243  [error]
+subject_id = S127, label = AD ||| num_AD = 244, num_NC = 242, num_total = 486
+subject_id = S009, label = AD ||| num_AD = 213, num_NC = 30, num_total = 243
+subject_id = S137, label = AD ||| num_AD = 242, num_NC = 1, num_total = 243
+subject_id = S192, label = AD ||| num_AD = 207, num_NC = 36, num_total = 243
+subject_id = S033, label = AD ||| num_AD = 214, num_NC = 272, num_total = 486  [error]
