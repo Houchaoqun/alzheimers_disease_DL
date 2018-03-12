@@ -6,7 +6,7 @@ Created on Wed Feb 28 19:52:27 2018
 @author: reserch
 """
 import os
-os.environ['CUDA_VISIBLE_DEVICES']='1'
+os.environ['CUDA_VISIBLE_DEVICES']='0'
 
 import torch
 import torch.nn as nn
@@ -35,9 +35,11 @@ data_transforms = {
 batch_size = 1
 # print(len(sys.argv))
 # target_resume_name = sys.argv[1]
-target_resume_name = "test"
-model_save_path = os.path.join('./pytorch_model', 'densenet201_96%_epoch50_single_subject_data_fold_02_train_val_test_entropy_keep_SliceNum_81.7t')
-folder_name = 'single_subject_data_fold_02_train_val_test_entropy_keep_SliceNum_81'
+target_resume_name = "train"
+folder_index = "fold_01"
+# model_save_path = os.path.join('./pytorch_model', 'single_subject_data_' + folder_index + '_train_val_test_entropy_keep_SliceNum_81_densenet.7t')
+model_save_path = os.path.join('./pytorch_model', 'single_subject_data_fold_01_train_val_test_entropy_keep_SliceNum_81_densenet161_imagenet_init.7t')
+folder_name = 'single_subject_data_' + folder_index + '_train_val_test_entropy_keep_SliceNum_81'
 # data_dir = os.path.join('/home/hcq/alzheimer_disease/ADNI_825/experiments_FineTunning', folder_name)
 data_dir = os.path.join('/home/reserch/documents/deeplearning/alzheimers_disease/ADNI-825-Slice/experiments_FineTunning', folder_name)
 test_datasets = datasets.ImageFolder(os.path.join(data_dir, target_resume_name), data_transforms['test'])
@@ -45,7 +47,7 @@ test_loader = torch.utils.data.DataLoader(test_datasets, batch_size=batch_size,
                                           shuffle=False, num_workers=4)
 
 ## print model info
-save_info_path = os.path.join("./result", target_resume_name + "_" + folder_name + ".txt")
+save_info_path = os.path.join("./result", target_resume_name + "_ActiveLearning_" + folder_name + ".txt")
 
 import datetime
 i = datetime.datetime.now()
@@ -54,14 +56,17 @@ date = str(i.year) + str("%02d"%i.month) + str("%02d"%i.day) + "-" + str("%02d"%
 with open(save_info_path, "a+") as save_info_txt:
     print("===" + date + "===")
     print("folder_name = {}".format(folder_name))
+    print("target_resume_name = {}".format(target_resume_name))
     print("model_save_path = {}".format(model_save_path))
+    
     save_info_txt.writelines("===" + date + "===" + "\n")
     save_info_txt.writelines("folder_name = {}".format(folder_name) + "\n")
+    save_info_txt.writelines("target_resume_name = {}".format(target_resume_name) + "\n")
     save_info_txt.writelines("model_save_path = {}".format(model_save_path) + "\n")
 
 # print(" ={}".format())
 
-print("*"*20)
+# print("*"*20)
 
 # =============================================================================
 # # 输出一个batch
@@ -76,9 +81,9 @@ use_gpu = torch.cuda.is_available()
 checkpoint = torch.load(model_save_path)
 
 model = checkpoint['net']
-best_acc = checkpoint['acc']
-start_epoch = checkpoint['epoch'] + 1
-best_epoch = checkpoint['epoch']
+# best_acc = checkpoint['acc']
+# start_epoch = checkpoint['epoch'] + 1
+# best_epoch = checkpoint['epoch']
 #print("best_acc = {}".format(best_acc))
 #print("epoch = {}".format(checkpoint['epoch']))
 
@@ -160,6 +165,8 @@ def predict_test():
 
 def predict_test2():
     model.eval()
+    ### lab_research: img_name_offset = 11
+    ### lab_research: img_name_offset = 9
     img_name_offset = 11
 
     ## final result
@@ -167,8 +174,8 @@ def predict_test2():
     num_all_subject = 0
     
     # print(target_resume_name)
-    subject_id_test_path = "./subject_id/"+ target_resume_name + "_single_subject_data_fold_02_train_val_test_entropy_keep_SliceNum_81.txt"
-    # subject_id_test_path = "./subject_id/validation_single_subject_data_fold_02_train_val_test_entropy_keep_SliceNum_81.txt"
+    subject_id_test_path = "./subject_id/"+ target_resume_name + "_single_subject_data_" + folder_index + "_train_val_test_entropy_keep_SliceNum_81.txt"
+    # subject_id_test_path = "./subject_id/validation_single_subject_data_" + folder_index + "_train_val_test_entropy_keep_SliceNum_81.txt"
     
     with open(subject_id_test_path, "r") as subject_id_test_list:
         for item in subject_id_test_list:
@@ -220,7 +227,11 @@ def predict_test2():
 
             ## calculate the final result
             num_all_subject += 1
-            percentage = float(num_AD)/num_NC
+            if(num_NC != 0):
+                percentage = float(num_AD)/num_NC
+            else:
+                print("num_NC = {}".format(num_NC))
+                percentage = 999
             # print("percentage = {}".format(percentage))
             if((percentage>1 and label == "AD") or (percentage<1 and label == "NC")):
                 dis_info = "subject_id = {}, label = {} ||| num_AD = {}, num_NC = {}, num_total = {}".format(cur_subject_id, label, num_AD, num_NC, num_total)
@@ -277,5 +288,3 @@ def predict_test3():
     
 #visualize_model(model)
 predict_test2()
-
-
